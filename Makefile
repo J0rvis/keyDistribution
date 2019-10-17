@@ -2,5 +2,8 @@
 CXX = g++
 CXXFLAGS = -Wall
 
-main: socketA.o
-	$(CXX) -o main socketA.cc
+serverA: serverA.o
+	$(CXX) -o main serverA.cc
+
+nodeB: nodeB.o
+	$(CXX) -o main nodeB.cc
