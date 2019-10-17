@@ -26,26 +26,49 @@ int main(int argc, char *argv[]){
  cout << "\nThis is the hostIP entered: " << argv[1] << "\n";
  cout << "\nThis is the portNumber entered: " << argv[2] << "\n";
 
- int socketA = socket(AF_INET, SOCK_STREAM, 0);
+   // char *host = argv[1];
+   int portNumber = atoi(argv[2]);
+   int socketA = socket(AF_INET, SOCK_STREAM, 0);
 
  // error check
- if(socketA < 0) {
+   if(socketA < 0) {
     cout << "\nERROR: oppening socket \n";
     exit(1);
- } else {
+   } else {
     cout << "\nOppening Socket: \n";
- }
+   }
  
- while (true){
-   //accept sockets 
-    listen(socketA, 5);
+   struct sockaddr_in serv_addr;
+   memset(&serv_addr, '0', sizeof(serv_addr));
+   serv_addr.sin_family = AF_INET;
 
+   serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+   serv_addr.sin_port = htons(portNumber);
+
+   /* Bind the socket to the given port*/
+   if (bind(socketA, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+    cout << "error on binding";
+    exit(1);
+   }
+
+    int is = 1;
+	  setsockopt(socketA,SOL_SOCKET,SO_REUSEADDR,&is,sizeof(int)); 
+
+    //end setup 
+
+   //accept sockets 
+    cout << "Still opening socket";
+    int listenResult = listen(socketA, 5);
+    cout << "Listened for socket: " << listenResult << "\n";
     int socketNode;
     struct sockaddr_in cli_addr;
 
     socklen_t client = sizeof(cli_addr);
 
+    cout << "waiting for that call";
     socketNode = accept(socketA, (struct sockaddr *) &cli_addr, &client);
+    cout << "accepted \n";
 
     if(socketNode < 0){
       cout << "Error on accept \n";
@@ -62,11 +85,11 @@ int main(int argc, char *argv[]){
 
       return socketNode;
     }
- }
 
  sleep(3);
  cout << " Closing Server ... ...\n\n";
  close(socketA); 
+
  return 0;
 
 }

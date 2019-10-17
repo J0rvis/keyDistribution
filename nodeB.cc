@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 
 
  if(server == NULL){
-    cout << "ERROR: No such host.";
+    cout << "ERROR: No such host.\n";
     exit(0);
  }
 
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
   /* Connect to the server*/
  int socketA = connect(socketNode,(struct sockaddr *) &serv_addr, sizeof(serv_addr));
  if (socketA < 0) {
-    printf("ERROR connecting\n");
+    cout << "error connecting: exiting \n";
     exit(0);
  }
  // read what is sent    
